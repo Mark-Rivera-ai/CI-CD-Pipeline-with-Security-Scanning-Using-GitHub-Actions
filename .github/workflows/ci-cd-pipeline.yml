@@ -20,7 +20,7 @@ jobs:
 
       - name: install dependencies
         run: pip install -r requirements.txt
-  
+        
   # SonarQube Static Code Analysis
       - name: SonarQube Scan
         env:
