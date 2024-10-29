@@ -1,0 +1,43 @@
+yaml
+
+name: CI/CD Pipeline with Security Scanning
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+steps:
+  - name: Checkout code
+    uses: actions/setup-python@v2
+    with:
+      python-version: '3.x'
+
+  - name: install dependencies
+    run: pip install -requirements.txt
+  
+  # SonarQube Static Code Analysis
+  - name: SonarQube Scan
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  run: |
+    pip install sonar-scannar-cli
+    sonar-scanner
+      -Dsonar.projectKey=Mark-Rivera-ai_minimal-todo-api \
+      -Dsonar.source=. \
+      -Dsonar.host.url=https://sonarcloud.io \
+      -Dsonar.login=$SONAR_TOKEN
+
+# OWASP Dependency-Check for Vulnerability Scanning
+- name: OWASP Dependency-Check
+  run: |
+  curl -L https://github.com/jeremylong/DependencyCheck/releases/download/v6.5.3/dependency-check-6.5.3-release.zip -o dependency-check.zip
+  unzip dependency-check.zip -d dependancy-check
+  ./dependecy-check/bin/dependency-check.sh --project "ToDo" --scan . --format "HTML" --out dependency-check-report
