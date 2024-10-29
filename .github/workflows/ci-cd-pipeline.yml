@@ -19,7 +19,7 @@ jobs:
           python-version: '3.x'
 
       - name: install dependencies
-        run: pip install -requirements.txt
+        run: pip install -r requirements.txt
   
   # SonarQube Static Code Analysis
       - name: SonarQube Scan
