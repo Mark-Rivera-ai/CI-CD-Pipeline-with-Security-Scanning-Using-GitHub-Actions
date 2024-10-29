@@ -23,7 +23,4 @@ def get_todos():
   return jsonify({'todo': todos})
 
 if __name__=='__main__':
-  app.run(debug=True)
-
-echo "Initial commit with Flask API code"
-    
+  app.run(debug=True)    
