@@ -20,7 +20,11 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-
+          distribution: 'temurin'
+      - name: Run SonarScanner
+        run: |
+          sonar-scanner -X
+          
       - name: Download and Set Up SonarScanner
         run: |
           curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
