@@ -11,29 +11,23 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Set up Java 17
+      - name: Set up Java
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
           distribution: 'temurin'
-      - name: Run SonarScanner
-        run: |
-          sonar-scanner -X
-          
-      - name: Download and Set Up SonarScanner
+          java-version: '17'
+
+      - name: Install SonarScanner
         run: |
           curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
           unzip sonar-scanner.zip -d $HOME/sonar-scanner
           export PATH="$HOME/sonar-scanner/sonar-scanner-4.8.0.2856-linux/bin:$PATH"
-          export JAVA_HOME="/usr/lib/jvm/temurin-17-jdk-amd64"
-          sonar-scanner \
-            -Dsonar.projectKey=Mark-Rivera-ai_minimal-todo-api \
-            -Dsonar.organization=your_organization \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
+      - name: Run SonarScanner
+        env:
+          JAVA_HOME: ${{ steps.setup-java.outputs.java-home }}
+        run: sonar-scanner -X
