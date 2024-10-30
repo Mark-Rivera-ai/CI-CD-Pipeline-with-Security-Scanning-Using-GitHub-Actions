@@ -20,6 +20,8 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+        env:
+          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.12-7/x64
 
       - name: Download and install SonarScanner
         run: |
@@ -29,15 +31,20 @@ jobs:
 
       - name: Run SonarScanner
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Ensure this token is set in GitHub Secrets
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           sonar-scanner \
             -Dsonar.projectKey=Mark-Rivera-ai_minimal-todo-api \
             -Dsonar.organization=Mark-Rivera-ai \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=$SONAR_TOKEN \
+            -Dsonar.java.source=17 \
+            -Dsonar.java.target=17 \
             -X
-      
+  
+      - name: Print JAVA_HOME
+        run: echo $JAVA_HOME
+        
       - name: Verify Java Version
         run: java -version
 
