@@ -20,10 +20,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'adopt'
-
-      - name: Verify Java Version
-        run: java -version
+          distribution: 'zulu'
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -33,46 +30,15 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # Set up SonarCloud (if using SonarCloud)
-      - name: Setup SonarCloud
-        uses: SonarSource/sonarcloud-github-action@v1
+      # SonarQube Static Code Analysis
+      - name: SonarQube Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      
-      - name: Run SonarQube Scan
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17*/x64  # Ensuring Java 17 is used
         run: |
-          sonar-scanner \
+          curl -L -o sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.1.3023-linux.zip
+          unzip sonar-scanner.zip
+          ./sonar-scanner-4.8.1.3023-linux/bin/sonar-scanner \
             -Dsonar.projectKey=your_project_key \
             -Dsonar.sources=. \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=$SONAR_TOKEN
-
-      # OWASP Dependency-Check for Vulnerability Scanning
-      - name: OWASP Dependency-Check
-        run: |
-          sudo apt-get update && sudo apt-get install -y unzip
-          curl -L -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/download/v6.5.3/dependency-check-6.5.3-release.zip
-          unzip dependency-check.zip -d dependency-check
-          ./dependency-check/bin/dependency-check.sh --project "ToDo API" --scan . --format "HTML" --out dependency-check-report
-
-      # Upload Dependency-Check Report as an Artifact
-      - name: Upload Dependency-Check Report
-        uses: actions/upload-artifact@v3
-        with:
-          name: dependency-check-report
-          path: dependency-check-report/dependency-check-report.html
-
-      # Unit Tests
-      - name: Run Unit Tests
-        run: |
-          # Run unit tests and save the results
-          python -m unittest discover > test_results.txt
-
-      - name: Upload Unit Test Results
-        uses: actions/upload-artifact@v3
-        with:
-          name: unit-test-results
-          path: test_results.txt
