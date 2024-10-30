@@ -35,7 +35,8 @@ jobs:
             -Dsonar.projectKey=Mark-Rivera-ai_minimal-todo-api \
             -Dsonar.organization=Mark-Rivera-ai \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=$SONAR_TOKEN -X
+            -Dsonar.login=$SONAR_TOKEN \
+            -X
       
       - name: Verify Java Version
         run: java -version
