@@ -22,6 +22,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Verify Java Version
+        run: java -version
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -34,7 +37,8 @@ jobs:
       - name: SonarQube Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin_jdk/17*/x64  # Explicitly set JAVA_HOME
+          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin_jdk/17*/x64  # Enforcing Java 17 for SonarScanner
+          PATH: $JAVA_HOME/bin:$PATH  # Adding Java 17 to the PATH
         run: |
           # Download SonarQube Scanner
           wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
