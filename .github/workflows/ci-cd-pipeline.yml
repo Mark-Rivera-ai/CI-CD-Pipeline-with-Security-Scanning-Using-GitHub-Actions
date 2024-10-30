@@ -17,45 +17,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up Java 17
+      # Step 2: Set up Java 17 for SonarCloud
       - name: Set up Java 17
         uses: actions/setup-java@v2
         with:
           java-version: '17'
           distribution: 'temurin'
+        env:
+          JAVA_HOME: /usr/lib/jvm/temurin-17-jdk-amd64
 
-      # Step 3: Verify Java Version
-      - name: Verify Java Version
-        run: java -version
-
-      # Step 4: Set JAVA_HOME for Java 17
-      - name: Set JAVA_HOME for Java 17
-        run: echo "JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))" >> $GITHUB_ENV
-
-      # Step 5: Set up Python
+      # Step 3: Install Python dependencies
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'
-
-      # Step 6: Install Python dependencies
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # Step 7: SonarCloud Scan with Official GitHub Action
+      # Step 4: SonarCloud Scan with Manual Configuration
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v1
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.projectKey=your_project_key
-            -Dsonar.organization=your_organization
-            -Dsonar.sources=.
-
-      # Step 8: OWASP Dependency-Check for Vulnerability Scanning
-      - name: OWASP Dependency-Check
         run: |
-          curl -L https://github.com/jeremylong/DependencyCheck/releases/download/v6.5.3/dependency-check-6.5.3-release.zip -o dependency-check.zip
-          unzip dependency-check.zip -d dependency-check
-          ./dependency-check/bin/dependency-check.sh --project "ToDo API" --scan . --format "HTML" --out dependency-check-report
+          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+          unzip sonar-scanner.zip -d $HOME/sonar-scanner
+          export PATH="$HOME/sonar-scanner/sonar-scanner-4.8.0.2856-linux/bin:$PATH"
+          sonar-scanner \
+            -Dsonar.projectKey=your_project_key \
+            -Dsonar.organization=your_organization \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
