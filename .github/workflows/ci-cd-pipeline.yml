@@ -40,13 +40,13 @@ jobs:
           JAVA_HOME: /opt/hostedtoolcache/Java_Temurin_jdk/17*/x64  # Enforcing Java 17 for SonarScanner
           PATH: $JAVA_HOME/bin:$PATH  # Adding Java 17 to the PATH
         run: |
-          # Download SonarQube Scanner
-          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-          unzip sonar-scanner-cli-4.6.2.2472-linux.zip
+          # Download SonarQube Scanner using curl
+          curl -L -o sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+          unzip sonar-scanner.zip
 
           # Run SonarQube Scanner
           ./sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner \
-            -Dsonar.projectKey=Mark-Rivera-ai_minimal-todo-api \
+            -Dsonar.projectKey=your_project_key \
             -Dsonar.sources=. \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=$SONAR_TOKEN
@@ -54,7 +54,7 @@ jobs:
       # OWASP Dependency-Check for Vulnerability Scanning
       - name: OWASP Dependency-Check
         run: |
-          curl -L https://github.com/jeremylong/DependencyCheck/releases/download/v6.5.3/dependency-check-6.5.3-release.zip -o dependency-check.zip
+          curl -L -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/download/v6.5.3/dependency-check-6.5.3-release.zip
           unzip dependency-check.zip -d dependency-check
           ./dependency-check/bin/dependency-check.sh --project "ToDo API" --scan . --format "HTML" --out dependency-check-report
 
