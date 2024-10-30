@@ -46,4 +46,4 @@ jobs:
             -Dsonar.java.source=17 \
             -Dsonar.java.target=17 \
             -X
-        shell: /usr/bin/bash -e {0}
+          shell: /usr/bin/bash -e {0}
