@@ -21,13 +21,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Install SonarScanner
+      - name: Download and install SonarScanner
         run: |
           curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
           unzip sonar-scanner.zip -d $HOME/sonar-scanner
-          export PATH="$HOME/sonar-scanner/sonar-scanner-4.8.0.2856-linux/bin:$PATH"
+          echo "$HOME/sonar-scanner/sonar-scanner-4.8.0.2856-linux/bin" >> $GITHUB_PATH
 
       - name: Run SonarScanner
-        env:
-          JAVA_HOME: ${{ steps.setup-java.outputs.java-home }}
         run: sonar-scanner -X
