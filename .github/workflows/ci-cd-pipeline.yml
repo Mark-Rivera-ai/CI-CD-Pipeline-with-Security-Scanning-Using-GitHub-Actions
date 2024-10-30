@@ -33,19 +33,17 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # SonarQube Static Code Analysis
-      - name: SonarQube Scan
+      # Set up SonarCloud (if using SonarCloud)
+      - name: Setup SonarCloud
+        uses: SonarSource/sonarcloud-github-action@v1
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin_jdk/17*/x64  # Enforcing Java 17 for SonarScanner
-          PATH: $JAVA_HOME/bin:$PATH  # Adding Java 17 to the PATH
+      
+      - name: Run SonarQube Scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          # Download SonarQube Scanner using curl
-          curl -L -o sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-          unzip sonar-scanner.zip
-
-          # Run SonarQube Scanner
-          ./sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner \
+          sonar-scanner \
             -Dsonar.projectKey=your_project_key \
             -Dsonar.sources=. \
             -Dsonar.host.url=https://sonarcloud.io \
@@ -54,6 +52,7 @@ jobs:
       # OWASP Dependency-Check for Vulnerability Scanning
       - name: OWASP Dependency-Check
         run: |
+          sudo apt-get update && sudo apt-get install -y unzip
           curl -L -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/download/v6.5.3/dependency-check-6.5.3-release.zip
           unzip dependency-check.zip -d dependency-check
           ./dependency-check/bin/dependency-check.sh --project "ToDo API" --scan . --format "HTML" --out dependency-check-report
