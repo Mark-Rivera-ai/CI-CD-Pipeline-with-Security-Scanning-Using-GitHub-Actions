@@ -28,4 +28,12 @@ jobs:
           echo "$HOME/sonar-scanner/sonar-scanner-4.8.0.2856-linux/bin" >> $GITHUB_PATH
 
       - name: Run SonarScanner
-        run: sonar-scanner -X
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Add your SonarCloud token in GitHub Secrets
+        run: |
+          sonar-scanner \
+            -Dsonar.projectKey=Mark-Rivera-ai_minimal-todo-api \
+            -Dsonar.organization=your_organization \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=$SONAR_TOKEN -X
+
