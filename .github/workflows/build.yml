@@ -41,11 +41,12 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-          -Dsonar.projectKey=Mark-Rivera-ai_minimal-todo-api \
-          -Dsonar.organization=Mark-Rivera-ai
+            -Dsonar.projectKey=Mark-Rivera-ai_minimal-todo-api \
+            -Dsonar.organization=Mark-Rivera-ai
 
       - name: OWASP Dependency-Check
-        run: mvn org.owasp:dependency-check-maven:check
+        run: |
+          mvn org.owasp:dependency-check-maven:check
 
       - name: Upload dependency-check report
         uses: actions/upload-artifact@v3
