@@ -35,7 +35,7 @@ jobs:
 
           # Run SonarQube Scanner
           ./sonar-scanner-4.6.2.2472-linux/bin/sonar-scanner \
-            -Dsonar.projectKey=your_project_key \
+            -Dsonar.projectKey=Mark-Rivera-ai_minimal-todo-api \
             -Dsonar.sources=. \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=$SONAR_TOKEN
@@ -46,3 +46,22 @@ jobs:
           curl -L https://github.com/jeremylong/DependencyCheck/releases/download/v6.5.3/dependency-check-6.5.3-release.zip -o dependency-check.zip
           unzip dependency-check.zip -d dependency-check
           ./dependency-check/bin/dependency-check.sh --project "ToDo API" --scan . --format "HTML" --out dependency-check-report
+
+      # Upload Dependency-Check Report as an Artifact
+      - name: Upload Dependency-Check Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: dependency-check-report
+          path: dependency-check-report/dependency-check-report.html
+
+      # Unit Tests
+      - name: Run Unit Tests
+        run: |
+          # Run unit tests and save the results
+          python -m unittest discover > test_results.txt
+
+      - name: Upload Unit Test Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: unit-test-results
+          path: test_results.txt
