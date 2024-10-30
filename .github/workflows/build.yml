@@ -40,9 +40,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-            -Dsonar.projectKey=Mark-Rivera-ai_minimal-todo-api \
-            -Dsonar.organization=Mark-Rivera-ai
+          mvn -B verify sonar:sonar \
+          -Dsonar.projectKey=Mark-Rivera-ai_minimal-todo-api \
+          -Dsonar.organization=mark-rivera-ai \
+          -Dsonar.host.url=https://sonarcloud.io
 
       - name: OWASP Dependency-Check
         run: |
