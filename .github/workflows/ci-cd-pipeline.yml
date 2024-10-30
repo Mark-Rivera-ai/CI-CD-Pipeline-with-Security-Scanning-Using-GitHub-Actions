@@ -27,10 +27,15 @@ jobs:
           unzip sonar-scanner.zip -d $HOME/sonar-scanner
           echo "$HOME/sonar-scanner/sonar-scanner-4.8.0.2856-linux/bin" >> $GITHUB_PATH
 
+      - name: Verify JAVA_HOME and Java version
+        run: |
+          echo "JAVA_HOME: $JAVA_HOME"
+          java -version
+
       - name: Run SonarScanner
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.12-7/x64  # Explicitly set JAVA_HOME to Java 17 path
+          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.12-7/x64  # Ensure JAVA_HOME is explicitly set for Java 17
         run: |
           sonar-scanner \
             -Dsonar.projectKey=Mark-Rivera-ai_minimal-todo-api \
@@ -40,6 +45,3 @@ jobs:
             -Dsonar.java.source=17 \
             -Dsonar.java.target=17 \
             -X
-
-      - name: Verify Java Version
-        run: java -version
