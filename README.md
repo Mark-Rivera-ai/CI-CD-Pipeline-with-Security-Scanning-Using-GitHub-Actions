@@ -1,56 +1,111 @@
-Minimal To-Do List API
+# Minimal TODO API
 
-This project provides a simple REST API built with Flask that allows users to manage to-do items. It also includes automated CI/CD workflows using GitHub Actions, integrating static code analysis with SonarCloud and security vulnerability scanning with OWASP Dependency-Check.
+A simple REST API built with Flask that allows you to manage todo items. This project demonstrates basic CRUD operations and RESTful API design.
 
-Table of Contents
-  - Setup
-  - Endpoints
-  - CI/CD Pipeline
-  - Dependencies
+## Features
 
-Setup
--Prerequisites
-   - Python 3.7+ installed on your local machine.
-   - Java 17 installed for Maven-based security scanning (for the CI/CD pipeline).
-   - SonarCloud account for code analysis.
-   - OWASP Dependency-Check for vulnerability scanning (integrated in the pipeline).
+- Create new todo items
+- Retrieve all todo items
+- Simple and lightweight
+- JSON-based API responses
 
-Installation
+## Prerequisites
+
+- Python 3.x
+- Flask
+- PowerShell or Command Prompt (for testing API endpoints)
+
+## Installation
+
 1. Clone the repository:
-   git clone https://github.com/Mark-Rivera-ai/minimal-todo-api.git
-   cd minimal-todo-api
-2. Install Python dependencies:
-   pip install -r requirements.txt
-3. Run the application:
-   python app.py
+```bash
+git clone https://github.com/Mark-Rivera-ai/minimal-todo-api.git
+cd minimal-todo-api
+```
 
-The server should start running on http://127.0.0.1:5000.
+2. Install Flask (if not already installed):
+```bash
+pip install flask
+```
 
-Endpoints
-- POST /todo: Add a new to-do item.
-    - Request:
-      { "task": "Buy groceries" }
-    - Response:
-      { "message": "To-do item added", "task": "Buy groceries" }
- - GET /todo: Retrieve all to-do items.
-    - Response:
-      { "todo": ["Buy groceries", "Read a book"] }
+## Running the Application
 
-CI/CD Pipeline
-This project uses GitHub Actions for continuous integration and security analysis. The pipeline includes:
-1. Static Code Analysis:
-   - SonarCloud is used to analyze code quality and maintainability.
-   - Configured via pom.xml and the build.yml workflow.
-2. Dependency Vulnerability Scanning:
-   - OWASP Dependency-Check scans for known security vulnerabilities in dependencies.
-   - The scan report is uploaded as an artifact in GitHub Actions.
+1. Start the Flask server:
+```bash
+python app.py
+```
 
-Workflow Files
-   - build.yml: Contains the setup for testing, building, and SonarCloud analysis.
-   - security.yml: Runs the OWASP Dependency-Check for vulnerability scanning.
+2. The server will start running at `http://127.0.0.1:5000`
 
-Dependencies
-All required Python packages are listed in the requirements.txt file. Key dependencies include:
-   - Flask: Lightweight WSGI web application framework.
-   - SonarCloud: For code quality analysis (configured in pom.xml and build.yml).
-   - OWASP Dependency-Check: For identifying vulnerabilities in dependencies.
+## API Endpoints
+
+### Create a Todo Item
+- **URL**: `/todo`
+- **Method**: `POST`
+- **Content-Type**: `application/json`
+- **Body**:
+```json
+{
+    "task": "Your task description"
+}
+```
+- **Bash Example**:
+```bash
+curl -X POST http://127.0.0.1:5000/todo \
+  -H "Content-Type: application/json" \
+  -d '{"task": "Pick up kids"}'
+```
+
+### Get All Todo Items
+- **URL**: `/todo`
+- **Method**: `GET`
+- **Bash Example**:
+```bash
+curl http://127.0.0.1:5000/todo
+```
+
+## Example Usage
+
+1. Start the server:
+```bash
+python app.py
+```
+
+2. Add a new todo item:
+```bash
+curl -X POST http://127.0.0.1:5000/todo \
+  -H "Content-Type: application/json" \
+  -d '{"task": "Pick up kids"}'
+```
+
+3. View all todo items:
+```bash
+curl http://127.0.0.1:5000/todo
+```
+
+## Project Structure
+```
+minimal-todo-api/
+├── app.py              # Main application file
+├── README.md           # Project documentation
+└── requirements.txt    # Project dependencies
+```
+
+## Technical Stack
+
+- Python 3.x
+- Flask (Web Framework)
+- JSON for data formatting
+- In-memory storage for todos
+
+## Security Note
+
+This is a development server and should not be used in production. For production deployment, use a proper WSGI server and implement appropriate security measures.
+
+## Contributing
+
+Feel free to submit issues, fork the repository, and create pull requests for any improvements.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
